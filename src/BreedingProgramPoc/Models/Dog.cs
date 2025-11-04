@@ -1,15 +1,21 @@
 using System.Reflection;
 using System.Text;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 namespace BreedingProgramPoc.Models;
 
 public record Dog
 {
-	public Phenotype<Colour> EyeColour { get; set; }
-	public Phenotype<Colour> CoatColour { get; set; }
-	public Phenotype<int> SnoutLength { get; set; }
-	public Phenotype<bool> LongHair { get; set; }
+	public Sex Sex = Sex.Female;
+	public int Age { get; set; } = 0;
+
+	public Phenotype<BreedSize> BreedSize { get; init; } = Models.BreedSize.Small;
+	public Phenotype<Colour> EyeColour { get; init; } = Colour.Gray;
+	public Phenotype<Colour> CoatColour { get; init; } = Colour.SandyBrown;
+	public Phenotype<int> SnoutLength { get; init; } = 10;
+	public Phenotype<HairType> HairType { get; init; } = Models.HairType.Short;
+	public Phenotype<int> HairLength { get; init; } = 5;
+	public Phenotype<bool> HasFringe { get; init; } = false;
+	public Phenotype<EarStyle> EarStyle { get; init; } = Models.EarStyle.Normal;
 
 	#region Display
 
@@ -47,7 +53,9 @@ public record Dog
 	{
 		_phenotypeProps ??= typeof(Dog)
 			.GetProperties()
-			.Where(p => p.PropertyType.GetGenericTypeDefinition() == typeof(Phenotype<>));
+			.Where(p =>
+				p.PropertyType.IsGenericType &&
+				p.PropertyType.GetGenericTypeDefinition() == typeof(Phenotype<>));
 
 		return _phenotypeProps;
 	}

@@ -4,17 +4,6 @@ namespace BreedingProgramPoc.Services;
 
 public class DogMan(Random rng) : IDogMan
 {
-	public Dog MakeDog()
-	{
-		return new Dog
-		{
-			EyeColour = MakePurebredPhenotype(Colour.Blue),
-			CoatColour = MakePurebredPhenotype(Colour.Brown),
-			LongHair = MakePurebredPhenotype(true),
-			SnoutLength = MakePurebredPhenotype(5)
-		};
-	}
-
 	public Dog Breed(Dog a, Dog b)
 	{
 		var d = new Dog();
@@ -46,14 +35,6 @@ public class DogMan(Random rng) : IDogMan
 		var gen = genA.ConstructNew(alleleA, alleleB);
 
 		var phen = new Phenotype<T>(gen);
-
 		return phen;
-	}
-
-	private static Phenotype<T> MakePurebredPhenotype<T>(T trait)
-	{
-		var a = new Allele<T>(trait, false);
-		var b = new Allele<T>(trait, true);
-		return new Phenotype<T>(new Genotype<T>(a, b));
 	}
 }

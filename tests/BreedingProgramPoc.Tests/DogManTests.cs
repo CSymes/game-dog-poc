@@ -17,34 +17,25 @@ public class DogManTests
 		_sut = new DogMan(_rng);
 	}
 
-	#region Helpers
-
-	private static Phenotype<T> MakePurebredPhenotype<T>(T trait, bool? dominant = null)
-	{
-		var a = new Allele<T>(trait, dominant ?? false);
-		var b = new Allele<T>(trait, dominant ?? true);
-		return new Phenotype<T>(new Genotype<T>(a, b));
-	}
-
-	#endregion
-
 	[TestMethod]
 	public void TestBreeding()
 	{
 		// Arrange
 		var dogA = new Dog
 		{
-			EyeColour = MakePurebredPhenotype(Colour.Blue, true),
-			CoatColour = MakePurebredPhenotype(Colour.Brown, false),
-			LongHair = MakePurebredPhenotype(true, true),
-			SnoutLength = MakePurebredPhenotype(5, false)
+			EyeColour = Phenotype<Colour>.PureBread(Colour.Blue, true),
+			CoatColour = Phenotype<Colour>.PureBread(Colour.Brown, false),
+			HairType = Phenotype<HairType>.PureBread(HairType.Short, true),
+			SnoutLength = Phenotype<int>.PureBread(5, false),
+			HasFringe = Phenotype<bool>.PureBread(false, true),
 		};
 		var dogB = new Dog
 		{
-			EyeColour = MakePurebredPhenotype(Colour.Green, false),
-			CoatColour = MakePurebredPhenotype(Colour.Black, false),
-			LongHair = MakePurebredPhenotype(false, false),
-			SnoutLength = MakePurebredPhenotype(3, false)
+			EyeColour = Phenotype<Colour>.PureBread(Colour.Green, false),
+			CoatColour = Phenotype<Colour>.PureBread(Colour.Black, false),
+			HairType = Phenotype<HairType>.PureBread(HairType.Curly, true),
+			SnoutLength = Phenotype<int>.PureBread(3, false),
+			HasFringe = Phenotype<bool>.PureBread(true, false),
 		};
 
 		// Act
@@ -53,7 +44,7 @@ public class DogManTests
 		// Assert
 		var coatBlend = Colour.FromArgb(255, 82, 21, 21);
 		Assert.AreEqual(coatBlend, result.CoatColour.TraitValue);
-		Assert.IsTrue(result.LongHair.TraitValue);
+		Assert.AreEqual(HairType.Curly, result.HairType.TraitValue);
 		Assert.AreEqual(Colour.Blue, result.EyeColour.TraitValue);
 		Assert.AreEqual(4, result.SnoutLength.TraitValue);
 	}

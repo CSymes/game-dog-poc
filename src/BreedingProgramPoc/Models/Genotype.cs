@@ -13,38 +13,44 @@ public record Genotype<T>(Allele<T> A, Allele<T> B)
 		throw new InvalidOperationException("Impossible state");
 	}
 
-	public Genotype<T> ConstructNew(Allele<T> A, Allele<T> B)
-	{
-		return new Genotype<T>(A, B);
-	}
+	public Genotype<T> ConstructNew(Allele<T> a, Allele<T> b) => new(a, b);
 
-	public override string ToString()
-	{
-		return $"Genotype (A = {A}, B = {B})";
-	}
+	public override string ToString() => $"Genotype (A = {A}, B = {B})";
 
 	private T BlendAlleles()
 	{
+		if (A.TraitValue == null || B.TraitValue == null) throw new InvalidOperationException();
+
 		return A.TraitValue switch
 		{
-			short or int or long or float or double => AverageNumeric(A.TraitValue, B.TraitValue),
-			Colour c => (T)(object)AverageColour((Colour)(object)A.TraitValue!, (Colour)(object)B.TraitValue!),
-			_ => throw new ArgumentException(nameof(T), "Unblendable trait type T=" + typeof(T).Name)
+			short or int or long or float or double => AverageNumeric(
+				A.TraitValue,
+				B.TraitValue),
+			Colour c => (T)(object)AverageColour(
+				(Colour)(object)A.TraitValue,
+				(Colour)(object)B.TraitValue),
+			Enum e => (T)(object)ChooseEnum(
+				(Enum)(object)A.TraitValue,
+				(Enum)(object)B.TraitValue,
+				A.IsDominant && B.IsDominant),
+			_ => throw new ArgumentException(nameof(T), "Unblendable trait type T=" + typeof(T).Name),
 		};
 	}
 
-	private static T AverageNumeric(T a, T b)
-	{
-		return (T)(object)(((dynamic)a! + (dynamic)b!) / 2);
-	}
+	private static T AverageNumeric(T a, T b) => (T)(object)(((dynamic)a! + (dynamic)b!) / 2);
 
-	private static Colour AverageColour(Colour a, Colour b)
-	{
-		return Colour.FromArgb(
+	private static Colour AverageColour(Colour a, Colour b) =>
+		Colour.FromArgb(
 			(a.A + b.A) / 2,
 			(a.R + b.R) / 2,
 			(a.G + b.G) / 2,
 			(a.B + b.B) / 2
 		);
+
+	private static Enum ChooseEnum(Enum a, Enum b, bool chooseUpper)
+	{
+		var alt = a.CompareTo(b) < 0;
+		if (chooseUpper) return alt ? b : a;
+		return alt ? a : b;
 	}
 }

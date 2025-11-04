@@ -4,4 +4,9 @@ public record Phenotype<T>(Genotype<T> Genotype)
 {
 	private readonly Lazy<T> _lazyTrait = new(Genotype.GetResult);
 	public T TraitValue => _lazyTrait.Value;
+
+	public override string ToString()
+	{
+		return TraitValue! + $" [{Genotype}]";
+	}
 }

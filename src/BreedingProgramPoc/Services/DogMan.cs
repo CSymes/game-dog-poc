@@ -22,9 +22,7 @@ public class DogMan(Random rng) : IDogMan
 		var breedGenMethod =
 			GetType().GetMethod(nameof(BreedPhenotypes), BindingFlags.Instance | BindingFlags.NonPublic)!;
 
-		foreach (var p in typeof(Dog)
-			         .GetProperties()
-			         .Where(p => p.PropertyType.GetGenericTypeDefinition() == typeof(Phenotype<>)))
+		foreach (var p in Dog.GetPhenotypeProperties())
 		{
 			var genA = p.GetValue(a);
 			var genB = p.GetValue(b);
@@ -56,6 +54,6 @@ public class DogMan(Random rng) : IDogMan
 	{
 		var a = new Allele<T>(trait, false);
 		var b = new Allele<T>(trait, true);
-		return new Phenotype<T>(new DominanceGenotype<T>(a, b));
+		return new Phenotype<T>(new Genotype<T>(a, b));
 	}
 }

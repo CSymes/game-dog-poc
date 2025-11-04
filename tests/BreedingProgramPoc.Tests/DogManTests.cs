@@ -1,4 +1,3 @@
-using BreedingProgramPoc.Genotypes;
 using BreedingProgramPoc.Models;
 using BreedingProgramPoc.Services;
 using Colour = System.Drawing.Color;
@@ -24,7 +23,7 @@ public class DogManTests
 	{
 		var a = new Allele<T>(trait, dominant ?? false);
 		var b = new Allele<T>(trait, dominant ?? true);
-		return new Phenotype<T>(new DominanceGenotype<T>(a, b));
+		return new Phenotype<T>(new Genotype<T>(a, b));
 	}
 
 	#endregion
@@ -54,7 +53,7 @@ public class DogManTests
 		// Assert
 		var coatBlend = Colour.FromArgb(255, 82, 21, 21);
 		Assert.AreEqual(coatBlend, result.CoatColour.TraitValue);
-		Assert.AreEqual(true, result.LongHair.TraitValue);
+		Assert.IsTrue(result.LongHair.TraitValue);
 		Assert.AreEqual(Colour.Blue, result.EyeColour.TraitValue);
 		Assert.AreEqual(4, result.SnoutLength.TraitValue);
 	}

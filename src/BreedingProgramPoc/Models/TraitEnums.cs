@@ -13,6 +13,14 @@ public enum BreedSize
 	Large,
 }
 
+public enum MuzzleType
+{
+	Snub,
+	Woofer,
+	Snout,
+	Borzoi,
+}
+
 public enum HairType
 {
 	Short,
@@ -25,7 +33,17 @@ public enum HairType
 public enum EarStyle
 {
 	Normal,
+	Shaggy,
 	Flop,
 	Megaflop,
 	Perky,
+}
+
+public enum TailStyle
+{
+	Otter,
+	Bushy,
+	Bob,
+	Curly,
+	Pompom,
 }

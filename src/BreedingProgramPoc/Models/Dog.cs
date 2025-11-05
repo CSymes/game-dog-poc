@@ -9,13 +9,15 @@ public record Dog
 	public int Age { get; set; } = 0;
 
 	public Phenotype<BreedSize> BreedSize { get; init; } = Models.BreedSize.Small;
-	public Phenotype<Colour> EyeColour { get; init; } = Colour.Gray;
-	public Phenotype<Colour> CoatColour { get; init; } = Colour.SandyBrown;
-	public Phenotype<int> SnoutLength { get; init; } = 10;
+	public Phenotype<double> LegProportions { get; init; } = 1.0;
+	public Phenotype<Colour> EyeColour { get; init; } = Colour.Gray; // TODO heterochromia
+	public Phenotype<Colour> CoatColour { get; init; } = Colour.SandyBrown; // TODO patterns and multi-colours
+	public Phenotype<MuzzleType> MuzzleType { get; init; } = Models.MuzzleType.Woofer;
 	public Phenotype<HairType> HairType { get; init; } = Models.HairType.Short;
 	public Phenotype<int> HairLength { get; init; } = 5;
 	public Phenotype<bool> HasFringe { get; init; } = false;
 	public Phenotype<EarStyle> EarStyle { get; init; } = Models.EarStyle.Normal;
+	public Phenotype<TailStyle> TailStyle { get; init; } = Models.TailStyle.Otter;
 
 	#region Display
 

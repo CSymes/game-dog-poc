@@ -26,7 +26,7 @@ public class DogManTests
 			EyeColour = Phenotype<Colour>.PureBread(Colour.Blue, true),
 			CoatColour = Phenotype<Colour>.PureBread(Colour.Brown, false),
 			HairType = Phenotype<HairType>.PureBread(HairType.Short, true),
-			SnoutLength = Phenotype<int>.PureBread(5, false),
+			HairLength = Phenotype<int>.PureBread(10, false),
 			HasFringe = Phenotype<bool>.PureBread(false, true),
 		};
 		var dogB = new Dog
@@ -34,7 +34,7 @@ public class DogManTests
 			EyeColour = Phenotype<Colour>.PureBread(Colour.Green, false),
 			CoatColour = Phenotype<Colour>.PureBread(Colour.Black, false),
 			HairType = Phenotype<HairType>.PureBread(HairType.Curly, true),
-			SnoutLength = Phenotype<int>.PureBread(3, false),
+			HairLength = Phenotype<int>.PureBread(3, false),
 			HasFringe = Phenotype<bool>.PureBread(true, false),
 		};
 
@@ -46,6 +46,6 @@ public class DogManTests
 		Assert.AreEqual(coatBlend, result.CoatColour.TraitValue);
 		Assert.AreEqual(HairType.Curly, result.HairType.TraitValue);
 		Assert.AreEqual(Colour.Blue, result.EyeColour.TraitValue);
-		Assert.AreEqual(4, result.SnoutLength.TraitValue);
+		Assert.AreEqual(6, result.HairLength.TraitValue);
 	}
 }

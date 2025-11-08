@@ -1,7 +1,22 @@
-﻿namespace BreedingProgramPoc;
+﻿using System.Reflection;
 
-public static class DogLibrary
+namespace BreedingProgramPoc.Services;
+
+public class DogLibrary : IDogLibrary
 {
+	private static readonly Dictionary<string, Func<Dog>> DogInits;
+
+	static DogLibrary()
+	{
+		DogInits = typeof(DogLibrary)
+			.GetMethods()
+			.Where(m =>
+				m is { IsAbstract: false, IsStatic: true } &&
+				m.ReturnParameter.ParameterType == typeof(Dog) &&
+				m.GetParameters().Length == 0)
+			.ToDictionary<MethodInfo, string, Func<Dog>>(m => m.Name, m => () => (Dog)m.Invoke(null, [])!);
+	}
+
 	public static Dog GoldenRetriever => new()
 	{
 		BreedSize = BreedSize.Large,
@@ -85,4 +100,11 @@ public static class DogLibrary
 		EarStyle = EarStyle.Perky,
 		TailStyle = TailStyle.Bushy,
 	};
+
+	public IEnumerable<string> GetDogTypes() => DogInits.Keys;
+
+	public Dog MakeDog(string type) =>
+		DogInits.TryGetValue(type, out var init)
+			? init()
+			: throw new ArgumentException($"Could not find dog type '{type}'");
 }

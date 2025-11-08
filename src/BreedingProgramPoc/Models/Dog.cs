@@ -5,7 +5,8 @@ namespace BreedingProgramPoc.Models;
 
 public record Dog
 {
-	public Sex Sex = Sex.Female;
+	public string Name { get; set; } = string.Empty;
+	public Sex Sex { get; set; } = Sex.Female;
 	public int Age { get; set; } = 0;
 
 	public Phenotype<BreedSize> BreedSize { get; init; } = Models.BreedSize.Small;
@@ -37,6 +38,8 @@ public record Dog
 	public string ToDisplayString()
 	{
 		var sb = new StringBuilder();
+
+		sb.AppendLine($"Name: {Name}");
 
 		var nameLength = GetPhenotypeProperties().Select(p => p.Name.Length).Max();
 

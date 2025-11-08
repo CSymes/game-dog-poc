@@ -7,7 +7,15 @@ public static class HostExtensions
 {
 	public static IHostApplicationBuilder AddServices(this IHostApplicationBuilder builder)
 	{
-		builder.Services.AddSingleton<IDogMan, DogMan>();
+		builder.Services
+			.AddSingleton<IDogMan, DogMan>()
+			.AddSingleton<IDogLibrary, DogLibrary>()
+			.AddTransient<Player>()
+			;
+
+		builder.Services
+			.AddTransient<Random>()
+			;
 
 		return builder;
 	}

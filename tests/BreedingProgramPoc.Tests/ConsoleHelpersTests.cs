@@ -36,6 +36,20 @@ public class ConsoleHelpersTests
 	}
 
 	[TestMethod]
+	public void WithBorder_PreservesPadding()
+	{
+		// Arrange
+		var input = "  Hello World!  \r\n";
+		var expected = "+----------------+\n|  Hello World!  |\n+----------------+\n";
+
+		// Act
+		var output = input.WithBorder(false);
+
+		// Assert
+		Assert.AreEqual(expected, output);
+	}
+
+	[TestMethod]
 	public void WithBorder_Multiline()
 	{
 		// Arrange

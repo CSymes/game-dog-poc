@@ -6,7 +6,12 @@ public class DogMan(Random rng) : IDogMan
 {
 	public Dog Breed(Dog a, Dog b)
 	{
-		var d = new Dog();
+		var d = new Dog
+		{
+			Name = Guid.NewGuid().ToString(),
+			Age = 0,
+			Sex = rng.NextEnum<Sex>(),
+		};
 
 		var breedGenMethod =
 			GetType().GetMethod(nameof(BreedPhenotypes), BindingFlags.Instance | BindingFlags.NonPublic)!;

@@ -39,15 +39,18 @@ public record Dog
 	{
 		var sb = new StringBuilder();
 
-		sb.AppendLine($"Name: {Name}");
-
 		var nameLength = GetPhenotypeProperties().Select(p => p.Name.Length).Max();
+		var maxWidth = 0;
 
 		foreach (var prop in GetPhenotypeProperties())
 		{
 			dynamic value = prop.GetValue(this)!;
-			sb.AppendLine($"{prop.Name.PadRight(nameLength)} = {value.TraitValue}");
+			var line = $"{prop.Name.PadRight(nameLength)} = {value.TraitValue}";
+			sb.AppendLine(line);
+			maxWidth = Math.Max(maxWidth, line.Length);
 		}
+
+		sb.Insert(0, $"Name: {Name}".PadCentre(maxWidth) + "\n");
 
 		return sb.ToString().TrimEnd();
 	}

@@ -27,8 +27,8 @@ public static class ConsoleHelpers
 		if (string.IsNullOrEmpty(text)) text = " ";
 
 		var stringBuilder = new StringBuilder();
-		var lines = text.Split("\n");
-		var contentWidth = lines.MaxBy(s => s.Trim().Length)!.Length;
+		var lines = text.TrimEnd('\n', '\r').Split("\n");
+		var contentWidth = lines.MaxBy(s => s.TrimEnd('\n', '\r').Length)!.Length;
 
 		stringBuilder.Append('+');
 		stringBuilder.Append(new string('-', contentWidth + (withSpacing ? 2 : 0)));
@@ -44,7 +44,7 @@ public static class ConsoleHelpers
 
 		foreach (var l in lines)
 		{
-			var ll = l.Trim();
+			var ll = l.TrimEnd('\n', '\r');
 			stringBuilder.Append('|');
 			if (withSpacing) stringBuilder.Append(' ');
 			stringBuilder.Append(ll);
@@ -68,5 +68,28 @@ public static class ConsoleHelpers
 		stringBuilder.Append('\n');
 
 		return stringBuilder.ToString();
+	}
+
+	public static T ChooseFrom<T>(Dictionary<string, T> options)
+	{
+		var keys = options.Keys.ToArray();
+		for (var i = 0; i < keys.Length; i++) Console.WriteLine($"  {i}: {keys[i]}");
+		while (true)
+		{
+			Console.Write("> ");
+			var selection = Console.ReadKey().KeyChar.ToString();
+
+			if (int.TryParse(selection, out var iSelected))
+			{
+				if (iSelected >= 0 && iSelected < options.Count)
+				{
+					Console.Write("\n");
+					var key = keys[iSelected];
+					return options[key];
+				}
+			}
+
+			Console.WriteLine("No! Naughty!");
+		}
 	}
 }

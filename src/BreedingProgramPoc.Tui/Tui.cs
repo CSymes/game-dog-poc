@@ -40,7 +40,7 @@ public class Tui(
 			}
 			catch (Exception ex)
 			{
-				logger.LogError(ex, ex.Message);
+				logger.LogError(ex, "{Error}", ex.Message);
 			}
 		}, cancellationToken);
 		return Task.CompletedTask;
@@ -58,6 +58,7 @@ public class Tui(
 		{
 			["refresh"] = () => { },
 			["add"] = ActionAddDog,
+			["breed"] = ActionBreed,
 		};
 		return actions;
 	}
@@ -133,6 +134,7 @@ public class Tui(
 			if (Console.CursorLeft + additionalWidth > Width && dogsSinceCarriageReturn > 0)
 			{
 				Console.SetCursorPosition(initialX, curRowBottom + 1);
+				curRowTop = Console.CursorTop;
 				dogsSinceCarriageReturn = 0;
 			}
 
@@ -151,30 +153,27 @@ public class Tui(
 		Console.WriteLine("Select which dog to add to inventory:");
 
 		var dogTypes = library.GetDogTypes().ToList();
-		for (var i = 0; i < dogTypes.Count; i++) Console.WriteLine($"  {i}: {dogTypes[i]}");
-
-		string? dogType = null;
-		while (_running)
-		{
-			Console.Write("> ");
-			var selection = Console.ReadKey().KeyChar.ToString();
-
-			if (int.TryParse(selection, out var iSelected))
-			{
-				if (iSelected >= 0 && iSelected < dogTypes.Count)
-				{
-					dogType = dogTypes[iSelected];
-					break;
-				}
-			}
-
-			Console.WriteLine("No! Naughty!");
-		}
-
-		if (dogType == null) return;
-
+		var dogType = ConsoleHelpers.ChooseFrom(dogTypes.ToDictionary(d => d, d => d));
 		var newDog = library.MakeDog(dogType);
 		newDog.Name = dogType;
 		player.Dogs.Add(newDog);
+	}
+
+	private void ActionBreed()
+	{
+		Console.WriteLine("Select first dog to breed:");
+		var dog1 = ConsoleHelpers.ChooseFrom(player.Dogs.ToDictionary(d => d.Name, d => d));
+		Console.WriteLine("Select second dog to breed:");
+		var dog2 = ConsoleHelpers.ChooseFrom(player.Dogs.Except([dog1]).ToDictionary(d => d.Name, d => d));
+
+		var newDog = dogMan.Breed(dog1, dog2);
+
+		Console.Write($"Cute 🐕! What's your new ({newDog.Sex}) dog's name?\n>");
+		var name = Console.ReadLine()?.Trim();
+		if (!string.IsNullOrWhiteSpace(name)) newDog.Name = name;
+
+		player.Dogs.Add(newDog);
+
+		Console.WriteLine($"Welcome little {newDog.Name} to the world!");
 	}
 }

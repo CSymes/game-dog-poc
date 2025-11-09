@@ -2,6 +2,8 @@
 
 public record Genotype<T>(Allele<T> A, Allele<T> B)
 {
+	private static readonly Random _rng = new();
+
 	public T GetResult()
 	{
 		// ReSharper disable once ConvertIfStatementToSwitchStatement
@@ -26,13 +28,14 @@ public record Genotype<T>(Allele<T> A, Allele<T> B)
 			short or int or long or float or double => AverageNumeric(
 				A.TraitValue,
 				B.TraitValue),
-			Colour c => (T)(object)AverageColour(
+			Colour => (T)(object)AverageColour(
 				(Colour)(object)A.TraitValue,
 				(Colour)(object)B.TraitValue),
-			Enum e => (T)(object)ChooseEnum(
+			Enum => (T)(object)ChooseEnum(
 				(Enum)(object)A.TraitValue,
 				(Enum)(object)B.TraitValue,
 				A.IsDominant && B.IsDominant),
+			bool => _rng.NextBool() ? A.TraitValue : B.TraitValue,
 			_ => throw new ArgumentException(nameof(T), "Unblendable trait type T=" + typeof(T).Name),
 		};
 	}

@@ -19,6 +19,7 @@ public class DogLibrary : IDogLibrary
 
 	public static Dog GoldenRetriever => new()
 	{
+		Name = "Fresh Golden Retriever",
 		BreedSize = BreedSize.Large,
 		LegProportions = 1.0,
 		EyeColour = Colour.Brown,
@@ -33,6 +34,7 @@ public class DogLibrary : IDogLibrary
 
 	public static Dog Poodle => new()
 	{
+		Name = "Fresh Poodle",
 		BreedSize = BreedSize.Medium,
 		LegProportions = 1.05,
 		EyeColour = Colour.Brown,
@@ -47,6 +49,7 @@ public class DogLibrary : IDogLibrary
 
 	public static Dog Labrador => new()
 	{
+		Name = "Fresh Labrador",
 		BreedSize = BreedSize.Large,
 		LegProportions = 0.95,
 		EyeColour = Colour.Brown,
@@ -61,6 +64,7 @@ public class DogLibrary : IDogLibrary
 
 	public static Dog AussieShepherd => new()
 	{
+		Name = "Fresh Aussie Shepherd",
 		BreedSize = BreedSize.Medium,
 		LegProportions = 1.0,
 		EyeColour = Colour.Blue,
@@ -75,6 +79,7 @@ public class DogLibrary : IDogLibrary
 
 	public static Dog BorderCollie => new()
 	{
+		Name = "Fresh Border Collie",
 		BreedSize = BreedSize.Medium,
 		LegProportions = 1.05,
 		EyeColour = Colour.Brown,
@@ -89,6 +94,7 @@ public class DogLibrary : IDogLibrary
 
 	public static Dog GermanShepherd => new()
 	{
+		Name = "Fresh German Shepherd",
 		BreedSize = BreedSize.Large,
 		LegProportions = 1.1,
 		EyeColour = Colour.Brown,

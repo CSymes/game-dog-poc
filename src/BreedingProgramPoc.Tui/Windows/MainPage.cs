@@ -1,6 +1,7 @@
-﻿using BreedingProgramPoc.Interfaces;
-using BreedingProgramPoc.Models;
-using Microsoft.Extensions.DependencyInjection;
+﻿using BreedingProgramPoc.Models;
+using BreedingProgramPoc.Services;
+using BreedingProgramPoc.Tui.Views;
+using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
@@ -12,10 +13,7 @@ public sealed class MainPage : Window
 	private readonly Dictionary<string, Action> _actions;
 
 	private readonly OptionSelector _actionsSelector;
-	private readonly IDogMan _dogMan = DI.ServiceProvider.GetRequiredService<IDogMan>();
-	private readonly TabView _dogsView;
-	private readonly IDogLibrary _library = DI.ServiceProvider.GetRequiredService<IDogLibrary>();
-	private readonly Player _player = DI.ServiceProvider.GetRequiredService<Player>();
+	private readonly Player _player = new();
 
 	public MainPage()
 	{
@@ -28,18 +26,19 @@ public sealed class MainPage : Window
 			["breed"] = ActionBreed,
 		};
 
-		_dogsView = new TabView
+		var dogsView = new DogTabView(_player)
 		{
 			X = 0,
 			Y = 0,
 			Width = Dim.Fill(),
 			Height = Dim.Percent(70),
+			AutoSwitch = true,
 		};
 
 		var actionsPane = new FrameView
 		{
 			X = 0,
-			Y = Pos.Bottom(_dogsView),
+			Y = Pos.Bottom(dogsView),
 			Width = Dim.Fill(),
 			Height = Dim.Fill(),
 		};
@@ -52,9 +51,7 @@ public sealed class MainPage : Window
 		};
 		actionsPane.Add(_actionsSelector);
 
-		UpdateDogTabs();
-
-		Add(_dogsView);
+		Add(dogsView);
 		Add(actionsPane);
 
 		AddCommand(Command.Accept, SelectAction);
@@ -109,38 +106,14 @@ public sealed class MainPage : Window
 		return true;
 	}
 
-	private void UpdateDogTabs()
+	private void ActionAddDog()
 	{
-		var existingTabs = _dogsView.Tabs.Select(t => t.DisplayText).ToHashSet();
-		var playerDogs = _player.Dogs.Select(d => d.Name).ToHashSet();
-
-		foreach (var dog in _player.Dogs)
-		{
-			// skip dogs already existing as tabs
-			if (existingTabs.Contains(dog.Name)) continue;
-
-			var label = new Label
-			{
-				Text = dog.ToDisplayString(),
-			};
-			var tab = new Tab
-			{
-				DisplayText = dog.Name,
-				View = label,
-			};
-			_dogsView.AddTab(tab, false);
-		}
-
-		// remove tabs that no longer have dogs
-		var badDogs = existingTabs.Except(playerDogs);
-		var badTabs = _dogsView.Tabs.Where(t => badDogs.Contains(t.DisplayText));
-		foreach (var toRemove in badTabs)
-		{
-			_dogsView.RemoveTab(toRemove);
-		}
+		_player.AddDog(DogLibrary.Poodle);
 	}
 
-	private void ActionAddDog() { }
-
-	private void ActionBreed() { }
+	private void ActionBreed()
+	{
+		var b = new BreedingWizard(_player);
+		Application.Run(b);
+	}
 }

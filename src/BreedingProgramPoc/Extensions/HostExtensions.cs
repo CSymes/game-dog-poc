@@ -10,7 +10,6 @@ public static class HostExtensions
 		builder.Services
 			.AddSingleton<IDogMan, DogMan>()
 			.AddSingleton<IDogLibrary, DogLibrary>()
-			.AddTransient<Player>()
 			;
 
 		builder.Services

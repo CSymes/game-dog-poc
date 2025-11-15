@@ -35,7 +35,7 @@ public record Dog
 		return sb.ToString().TrimEnd();
 	}
 
-	public string ToDisplayString()
+	public string ToDisplayString(bool includeName = true)
 	{
 		var sb = new StringBuilder();
 
@@ -50,7 +50,10 @@ public record Dog
 			maxWidth = Math.Max(maxWidth, line.Length);
 		}
 
-		sb.Insert(0, $"Name: {Name}".PadCentre(maxWidth) + "\n");
+		if (includeName)
+		{
+			sb.Insert(0, $"Name: {Name}".PadCentre(maxWidth) + "\n");
+		}
 
 		return sb.ToString().TrimEnd();
 	}
